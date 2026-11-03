@@ -1,8 +1,7 @@
 import { useEffect, useState } from 'react';
-import { resolveCoordinateName } from '../lib/geoNaming.js';
 
+const SIMULATED_LATENCY_MS = 300;
 const GITHUB_RAW_BASE = 'https://raw.githubusercontent.com/Rebuild-It-Labs/Forest_Monitor/main/';
-const SIMULATED_LATENCY_MS = 400;
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
@@ -21,7 +20,10 @@ function severityFromChange(severityStr) {
 }
 
 function adaptRunToLocation(run, index) {
-  const geo = resolveCoordinateName(run.lat, run.lon, run.acres);
+  // Use user-preferred name if provided in run.name or run.title, otherwise clean fallback
+  const name = run.name || run.title || run.key || `Plot ${run.lat.toFixed(4)}, ${run.lon.toFixed(4)}`;
+  const state = run.state || 'Monitored Forest';
+  const biome = run.biome || 'Dense Forest Reserve';
 
   const date10y = parseDateFromFilename(run.images?.['10y']) || '2016-10-16';
   const date5y = parseDateFromFilename(run.images?.['5y']) || '2021-10-20';
@@ -34,7 +36,8 @@ function adaptRunToLocation(run, index) {
   const pct10y = ch10Now.pct ?? 0;
   const severity = severityFromChange(ch10Now.severity || ch5Now.severity);
 
-  const coordBase = `${GITHUB_RAW_BASE}coordinates/${run.key}/`;
+  // Relative path served from public/coordinates or repo base
+  const coordBase = `coordinates/${run.key}/`;
   const acres = run.acres || 100;
   const totalHa = acres * 0.404686;
   const lossHa = +(totalHa * (pct10y / 100)).toFixed(2);
@@ -60,15 +63,16 @@ function adaptRunToLocation(run, index) {
   return {
     id: run.key,
     index,
-    name: geo.name,
-    state: geo.state,
-    biome: geo.biome,
+    name,
+    state,
+    biome,
     lat: run.lat,
     lng: run.lon,
     severity,
     imagery: {
       tenYearsAgo: {
         src: `${coordBase}${run.images?.['10y'] || '10y_2016-10-16.png'}`,
+        rawSrc: `${GITHUB_RAW_BASE}${coordBase}${run.images?.['10y'] || '10y_2016-10-16.png'}`,
         label: '10 YEARS AGO',
         short: 'T-10Y',
         date: date10y,
@@ -78,6 +82,7 @@ function adaptRunToLocation(run, index) {
       },
       fiveYearsAgo: {
         src: `${coordBase}${run.images?.['5y'] || '5y_2021-10-20.png'}`,
+        rawSrc: `${GITHUB_RAW_BASE}${coordBase}${run.images?.['5y'] || '5y_2021-10-20.png'}`,
         label: '5 YEARS AGO',
         short: 'T-5Y',
         date: date5y,
@@ -87,6 +92,7 @@ function adaptRunToLocation(run, index) {
       },
       current: {
         src: `${coordBase}${run.images?.['now'] || 'now_2026-10-14.png'}`,
+        rawSrc: `${GITHUB_RAW_BASE}${coordBase}${run.images?.['now'] || 'now_2026-10-14.png'}`,
         label: 'CURRENT · SENTINEL-2',
         short: 'NOW',
         date: dateNow,
@@ -96,6 +102,7 @@ function adaptRunToLocation(run, index) {
       },
       heatmap: {
         src: `${coordBase}10y_to_now_heatmap.png`,
+        rawSrc: `${GITHUB_RAW_BASE}${coordBase}10y_to_now_heatmap.png`,
         label: 'SWIN-VIT CHANGE HEATMAP',
         short: 'HEAT',
         date: dateNow,

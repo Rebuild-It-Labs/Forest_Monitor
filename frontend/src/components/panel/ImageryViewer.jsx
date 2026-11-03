@@ -40,8 +40,19 @@ export default function ImageryViewer({ imagery, artifacts, assetBase }) {
   const [playing, setPlaying] = useState(true);
   const [pair, setPair] = useState({ a: 'tenYearsAgo', b: 'current' });
   const [pos, setPos] = useState(50);
-  const src = (k) => resolveAsset(assetBase, imagery[k].src);
+  const src = (k) => {
+    const item = imagery[k];
+    if (!item) return '';
+    return resolveAsset(assetBase, item.src);
+  };
   const preloaded = useRef(false);
+
+  const handleImgError = (k) => (e) => {
+    const raw = imagery[k]?.rawSrc;
+    if (raw && e.currentTarget.src !== raw) {
+      e.currentTarget.src = raw;
+    }
+  };
 
   // preload all four frames so cross-fades never flash empty
   useEffect(() => {
@@ -104,6 +115,7 @@ export default function ImageryViewer({ imagery, artifacts, assetBase }) {
                 src={src(key)}
                 alt={`${item.label} satellite view`}
                 draggable={false}
+                onError={handleImgError(key)}
                 className="absolute inset-0 h-full w-full object-cover"
                 initial={{ opacity: 0, scale: 1.05 }}
                 animate={{ opacity: 1, scale: 1 }}
@@ -141,7 +153,13 @@ export default function ImageryViewer({ imagery, artifacts, assetBase }) {
                     active ? (heat ? 'border-alert-magenta shadow-alert' : 'border-neon shadow-neon') : 'border-white/15 hover:border-white/40'
                   }`}
                 >
-                  <img src={src(k)} alt="" draggable={false} className={`h-11 w-full object-cover transition-opacity ${active ? 'opacity-100' : 'opacity-55 group-hover:opacity-90'}`} />
+                  <img
+                    src={src(k)}
+                    alt=""
+                    draggable={false}
+                    onError={handleImgError(k)}
+                    className={`h-11 w-full object-cover transition-opacity ${active ? 'opacity-100' : 'opacity-55 group-hover:opacity-90'}`}
+                  />
                   <span className={`block px-1.5 py-1 font-mono text-[9px] tracking-widest ${active ? (heat ? 'text-alert-magenta' : 'text-neon') : 'text-white/50'}`}>
                     {imagery[k].short}
                   </span>
@@ -183,15 +201,16 @@ export default function ImageryViewer({ imagery, artifacts, assetBase }) {
           </div>
 
           <div
-            className="hud-corners relative aspect-[8/5] cursor-ew-resize select-none overflow-hidden rounded-lg border border-neon/25 bg-black"
+            className="hud-corners relative aspect-[8/5] cursor-ew-resize select-none overflow-hidden rounded-lg border border-neon/25 bg-black touch-none"
             onPointerDown={(e) => {
-              const rect = e.currentTarget.getBoundingClientRect();
-              const update = (evt) => {
-                const x = Math.max(0, Math.min(rect.width, evt.clientX - rect.left));
+              const el = e.currentTarget;
+              const update = (clientX) => {
+                const rect = el.getBoundingClientRect();
+                const x = Math.max(0, Math.min(rect.width, clientX - rect.left));
                 setPos((x / rect.width) * 100);
               };
-              update(e);
-              const move = (evt) => update(evt);
+              update(e.clientX);
+              const move = (evt) => update(evt.clientX);
               const up = () => {
                 window.removeEventListener('pointermove', move);
                 window.removeEventListener('pointerup', up);
@@ -200,23 +219,42 @@ export default function ImageryViewer({ imagery, artifacts, assetBase }) {
               window.addEventListener('pointerup', up);
             }}
           >
-            <img src={src(pair.b)} alt={imagery[pair.b].label} draggable={false} className="absolute inset-0 h-full w-full object-cover" />
-            <div className="absolute inset-y-0 left-0 overflow-hidden" style={{ width: `${pos}%` }}>
-              <img src={src(pair.a)} alt={imagery[pair.a].label} draggable={false} className="absolute inset-0 h-full max-w-none object-cover" style={{ width: '100cqw' }} />
-            </div>
+            {/* Background / After frame (pair.b) */}
+            <img
+              src={src(pair.b)}
+              alt={imagery[pair.b].label}
+              draggable={false}
+              onError={handleImgError(pair.b)}
+              className="absolute inset-0 h-full w-full object-cover select-none pointer-events-none"
+            />
 
+            {/* Foreground / Before frame (pair.a) - clipped seamlessly with standard CSS clipPath */}
+            <img
+              src={src(pair.a)}
+              alt={imagery[pair.a].label}
+              draggable={false}
+              onError={handleImgError(pair.a)}
+              className="absolute inset-0 h-full w-full object-cover select-none pointer-events-none"
+              style={{
+                clipPath: `polygon(0 0, ${pos}% 0, ${pos}% 100%, 0 100%)`,
+                WebkitClipPath: `polygon(0 0, ${pos}% 0, ${pos}% 100%, 0 100%)`,
+              }}
+            />
+
+            {/* Divider line & handle */}
             <div className="pointer-events-none absolute inset-y-0" style={{ left: `${pos}%` }}>
               <div className="absolute -left-px inset-y-0 w-0.5 bg-neon shadow-neon" />
-              <div className="absolute top-1/2 -translate-x-1/2 -translate-y-1/2 flex h-6 w-6 items-center justify-center rounded-full border border-neon bg-black/80 font-mono text-[9px] text-neon">
+              <div className="absolute top-1/2 -translate-x-1/2 -translate-y-1/2 flex h-6 w-6 items-center justify-center rounded-full border border-neon bg-black/90 font-mono text-[10px] text-neon shadow-md shadow-neon/40">
                 ↔
               </div>
             </div>
 
-            <div className="pointer-events-none absolute left-2 top-2 rounded bg-black/70 px-1.5 py-0.5 font-mono text-[9px] text-white/70">
-              {imagery[pair.a].short}
+            {/* Labels */}
+            <div className="pointer-events-none absolute left-2 top-2 rounded border border-white/20 bg-black/80 px-2 py-0.5 font-mono text-[9px] font-medium tracking-wide text-white/90">
+              {imagery[pair.a].short} ({imagery[pair.a].date})
             </div>
-            <div className="pointer-events-none absolute right-2 top-2 rounded bg-black/70 px-1.5 py-0.5 font-mono text-[9px] text-white/70">
-              {imagery[pair.b].short}
+            <div className="pointer-events-none absolute right-2 top-2 rounded border border-white/20 bg-black/80 px-2 py-0.5 font-mono text-[9px] font-medium tracking-wide text-white/90">
+              {imagery[pair.b].short} ({imagery[pair.b].date})
             </div>
           </div>
         </div>
