@@ -203,3 +203,4 @@ export function getOrbitRingPoints(sat, timestampMs = Date.now(), segments = 128
   }
   return points;
 }
+
