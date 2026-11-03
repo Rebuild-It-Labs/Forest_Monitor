@@ -1,0 +1,74 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="600" viewBox="0 0 960 600" preserveAspectRatio="xMidYMid slice">
+
+<defs>
+  <filter id="terrain" x="0" y="0" width="100%" height="100%" color-interpolation-filters="sRGB">
+    <feTurbulence type="fractalNoise" baseFrequency="0.007 0.011" numOctaves="5" seed="3006" result="n1"/>
+    <feColorMatrix in="n1" type="matrix" values="1 0 0 0 0  1 0 0 0 0  1 0 0 0 0  0 0 0 0 1" result="g1"/>
+    <feComponentTransfer in="g1" result="g1c">
+      <feFuncR type="linear" slope="2.6" intercept="-0.78"/><feFuncG type="linear" slope="2.6" intercept="-0.78"/><feFuncB type="linear" slope="2.6" intercept="-0.78"/>
+    </feComponentTransfer>
+    <feComponentTransfer in="g1c" result="pal">
+      <feFuncR type="table" tableValues="0.02 0.04 0.07 0.12 0.22 0.36"/><feFuncG type="table" tableValues="0.10 0.17 0.26 0.36 0.46 0.52"/><feFuncB type="table" tableValues="0.04 0.06 0.08 0.10 0.15 0.18"/>
+    </feComponentTransfer>
+    <feTurbulence type="fractalNoise" baseFrequency="0.085" numOctaves="2" seed="3013" result="n2"/>
+    <feColorMatrix in="n2" type="matrix" values="1 0 0 0 0  1 0 0 0 0  1 0 0 0 0  0 0 0 0 1" result="g2"/>
+    <feComposite in="pal" in2="g2" operator="arithmetic" k1="0.7" k2="0.62" k3="0" k4="0" result="grain"/>
+    
+  </filter>
+  <filter id="soil" x="0" y="0" width="100%" height="100%" color-interpolation-filters="sRGB">
+    <feTurbulence type="fractalNoise" baseFrequency="0.03 0.05" numOctaves="3" seed="3009" result="s"/>
+    <feColorMatrix in="s" type="matrix" values="1 0 0 0 0  1 0 0 0 0  1 0 0 0 0  0 0 0 0 1" result="sg"/>
+    <feComponentTransfer in="sg" result="sp">
+      <feFuncR type="table" tableValues="0.38 0.52 0.62 0.72 0.8"/><feFuncG type="table" tableValues="0.27 0.38 0.46 0.54 0.6"/><feFuncB type="table" tableValues="0.16 0.22 0.28 0.34 0.4"/>
+    </feComponentTransfer>
+    <feComposite in="sp" in2="SourceAlpha" operator="in" result="fill"/>
+    <feMorphology in="SourceAlpha" operator="erode" radius="2" result="inner"/>
+    <feGaussianBlur in="inner" stdDeviation="2" result="innerBlur"/>
+    <feComposite in="fill" in2="innerBlur" operator="in"/>
+  </filter>
+  <filter id="mono" color-interpolation-filters="sRGB">
+    <feColorMatrix type="saturate" values="0.1"/>
+    <feComponentTransfer><feFuncR type="linear" slope="0.5" intercept="0.02"/><feFuncG type="linear" slope="0.55" intercept="0.03"/><feFuncB type="linear" slope="0.55" intercept="0.03"/></feComponentTransfer>
+  </filter>
+  <radialGradient id="hot"><stop offset="0" stop-color="#ffd1e6" stop-opacity="0.95"/><stop offset="0.25" stop-color="#ff2e63" stop-opacity="0.85"/><stop offset="0.6" stop-color="#ff00aa" stop-opacity="0.4"/><stop offset="1" stop-color="#ff00aa" stop-opacity="0"/></radialGradient>
+  <radialGradient id="warm"><stop offset="0" stop-color="#ff7a45" stop-opacity="0.75"/><stop offset="0.5" stop-color="#ff2e63" stop-opacity="0.35"/><stop offset="1" stop-color="#ff2e63" stop-opacity="0"/></radialGradient>
+</defs>
+<rect width="960" height="600" fill="#06140c" filter="url(#terrain)"/>
+
+<path d="M380.3,85.8 Q223.3,106.4 134,199.4" fill="none" stroke="#2a2418" stroke-width="3.2" opacity="0.4"/><path d="M380.3,85.8 Q223.3,106.4 134,199.4" fill="none" stroke="#d6c7a1" stroke-width="1.4" opacity="0.5"/>
+<path d="M134,199.4 Q80.4,224.7 108.6,252.2" fill="none" stroke="#2a2418" stroke-width="3.2" opacity="0.4"/><path d="M134,199.4 Q80.4,224.7 108.6,252.2" fill="none" stroke="#d6c7a1" stroke-width="1.4" opacity="0.5"/>
+<path d="M108.6,252.2 Q361.8,325.5 578.3,448.5" fill="none" stroke="#2a2418" stroke-width="3.2" opacity="0.4"/><path d="M108.6,252.2 Q361.8,325.5 578.3,448.5" fill="none" stroke="#d6c7a1" stroke-width="1.4" opacity="0.5"/>
+<path d="M578.3,448.5 Q301.8,263.4 136.9,93.6" fill="none" stroke="#2a2418" stroke-width="3.2" opacity="0.4"/><path d="M578.3,448.5 Q301.8,263.4 136.9,93.6" fill="none" stroke="#d6c7a1" stroke-width="1.4" opacity="0.5"/>
+<path d="M136.9,93.6 Q229.5,213.5 270.3,389.9" fill="none" stroke="#2a2418" stroke-width="3.2" opacity="0.4"/><path d="M136.9,93.6 Q229.5,213.5 270.3,389.9" fill="none" stroke="#d6c7a1" stroke-width="1.4" opacity="0.5"/>
+<path d="M270.3,389.9 Q557.2,274.1 757.4,161" fill="none" stroke="#2a2418" stroke-width="3.2" opacity="0.4"/><path d="M270.3,389.9 Q557.2,274.1 757.4,161" fill="none" stroke="#d6c7a1" stroke-width="1.4" opacity="0.5"/>
+<path d="M757.4,161 Q468.9,113.6 108.9,122.3" fill="none" stroke="#2a2418" stroke-width="3.2" opacity="0.4"/><path d="M757.4,161 Q468.9,113.6 108.9,122.3" fill="none" stroke="#d6c7a1" stroke-width="1.4" opacity="0.5"/>
+<path d="M108.9,122.3 Q309.9,119.5 437.9,116.4" fill="none" stroke="#2a2418" stroke-width="3.2" opacity="0.4"/><path d="M108.9,122.3 Q309.9,119.5 437.9,116.4" fill="none" stroke="#d6c7a1" stroke-width="1.4" opacity="0.5"/>
+<path d="M437.9,116.4 Q519.8,274.2 675.4,372.5" fill="none" stroke="#2a2418" stroke-width="3.2" opacity="0.4"/><path d="M437.9,116.4 Q519.8,274.2 675.4,372.5" fill="none" stroke="#d6c7a1" stroke-width="1.4" opacity="0.5"/>
+<path d="M675.4,372.5 Q495.4,335.1 352.2,372.3" fill="none" stroke="#2a2418" stroke-width="3.2" opacity="0.4"/><path d="M675.4,372.5 Q495.4,335.1 352.2,372.3" fill="none" stroke="#d6c7a1" stroke-width="1.4" opacity="0.5"/>
+<path d="M352.2,372.3 Q296.8,401 145.5,402.9" fill="none" stroke="#2a2418" stroke-width="3.2" opacity="0.4"/><path d="M352.2,372.3 Q296.8,401 145.5,402.9" fill="none" stroke="#d6c7a1" stroke-width="1.4" opacity="0.5"/>
+<path d="M145.5,402.9 Q417.9,425.7 622.1,495.6" fill="none" stroke="#2a2418" stroke-width="3.2" opacity="0.4"/><path d="M145.5,402.9 Q417.9,425.7 622.1,495.6" fill="none" stroke="#d6c7a1" stroke-width="1.4" opacity="0.5"/>
+<path d="M622.1,495.6 Q554.2,396.4 457.4,220.6" fill="none" stroke="#2a2418" stroke-width="3.2" opacity="0.4"/><path d="M622.1,495.6 Q554.2,396.4 457.4,220.6" fill="none" stroke="#d6c7a1" stroke-width="1.4" opacity="0.5"/>
+<path d="M457.4,220.6 Q553.3,288.3 720.1,310.8" fill="none" stroke="#2a2418" stroke-width="3.2" opacity="0.4"/><path d="M457.4,220.6 Q553.3,288.3 720.1,310.8" fill="none" stroke="#d6c7a1" stroke-width="1.4" opacity="0.5"/>
+<path d="M720.1,310.8 Q450.4,379.9 267.5,439.9" fill="none" stroke="#2a2418" stroke-width="3.2" opacity="0.4"/><path d="M720.1,310.8 Q450.4,379.9 267.5,439.9" fill="none" stroke="#d6c7a1" stroke-width="1.4" opacity="0.5"/>
+<path d="M267.5,439.9 Q379.2,262.2 434.5,87.4" fill="none" stroke="#2a2418" stroke-width="3.2" opacity="0.4"/><path d="M267.5,439.9 Q379.2,262.2 434.5,87.4" fill="none" stroke="#d6c7a1" stroke-width="1.4" opacity="0.5"/>
+<path d="M434.5,87.4 Q423.1,168.6 364.6,251.3" fill="none" stroke="#2a2418" stroke-width="3.2" opacity="0.4"/><path d="M434.5,87.4 Q423.1,168.6 364.6,251.3" fill="none" stroke="#d6c7a1" stroke-width="1.4" opacity="0.5"/>
+<g filter="url(#soil)"><polygon points="477.3,97.8 442.7,153.7 349.1,164.2 317,123.3 306.9,25.3 369.3,28.5 430.2,39.8" fill="#000"/>
+<polygon points="90.6,210.3 125.9,180.4 177.8,188.5 142,218.3" fill="#000"/>
+<polygon points="179,256.6 158.3,293 122,337.1 67.8,337 26.7,304.3 40.8,218.4 93.9,201.6 123,178.7 151.8,207.3" fill="#000"/>
+<polygon points="601.1,453 597,469.3 574.3,482.8 546.8,481 534,453.3 555.4,416.6 575.3,416 605.6,413.9" fill="#000"/>
+<polygon points="172.4,88.9 171,111 144.9,141.8 125.1,130.7 90.6,115.4 77.2,82.1 88.3,69.4 126,59.6 144.4,29.7 179.7,74" fill="#000"/>
+<polygon points="230,424.6 240.1,369.2 310.1,355.5 296.6,408" fill="#000"/>
+<polygon points="734.5,233 701,150.4 777.5,97.8 815.1,171.9" fill="#000"/>
+<polygon points="145.7,126.9 134,151.9 101,167.5 89,151.3 64.7,112.9 87.1,100.5 114.1,96.7 137.7,101.6" fill="#000"/>
+<polygon points="482.7,123.2 455.4,146.1 417.2,163.3 402.9,141.8 392,107 434.6,89.6 462.1,73.9" fill="#000"/>
+<polygon points="720.5,367 692.1,399.1 656.5,409.9 648.5,379.6 637.6,354.9 662.3,326 690.3,348" fill="#000"/>
+<polygon points="303.5,458 283.5,349.2 401.6,285.4 415.7,393.6" fill="#000"/>
+<polygon points="232.3,415.9 194.1,458.4 147.5,486.9 100.3,471.4 45.1,422.9 49.8,364.6 116.4,356.4 149.6,321.5 208.7,362.6" fill="#000"/>
+<polygon points="708.1,486.2 680.7,521.1 644.5,554.7 594.6,546.2 564.5,563.3 539.1,491.6 569.8,439.5 603.2,442.6 642.9,409.9 654.3,459.7" fill="#000"/>
+<polygon points="392.3,237.8 444.3,191.1 523.8,203.2 471.1,251.3" fill="#000"/>
+<polygon points="693,339.1 696,297.1 748.3,281.4 743.6,324.1" fill="#000"/>
+<polygon points="315.8,447.1 320,469.9 276.2,490 228.4,485.2 219.2,447.7 196,427 246.4,375.3 267.7,387.7 315.3,402.5" fill="#000"/>
+<polygon points="492.1,100.4 491.2,147.8 448.8,174.7 412,168.3 388,118.7 376.2,86 370.1,34.6 400.3,33.1 459,46.5 487.7,29.5" fill="#000"/>
+<polygon points="418.5,261.7 398.5,283.9 353.8,302.8 314.6,281.1 324.9,231 362.9,192.6 378.9,223.2" fill="#000"/></g>
+<rect width="960" height="600" fill="rgba(0,0,0,0)"/>
+</svg>

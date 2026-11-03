@@ -1,0 +1,66 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    color-scheme: dark;
+  }
+  html,
+  body,
+  #root {
+    height: 100%;
+    margin: 0;
+    background: #000;
+  }
+  body {
+    overflow: hidden;
+    overscroll-behavior: none;
+    font-family: 'Rajdhani', ui-sans-serif, system-ui, sans-serif;
+    font-weight: 500;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  canvas {
+    display: block;
+    touch-action: none;
+    outline: none;
+  }
+  ::selection {
+    background: rgba(0, 255, 136, 0.3);
+    color: #fff;
+  }
+  :focus-visible {
+    outline: 2px solid #00ff88;
+    outline-offset: 2px;
+  }
+  select option {
+    background: #050807;
+    color: #e6fff3;
+  }
+}
+
+/* Neon glow on Recharts curves (filters are applied to the rendered SVG paths) */
+.neon-chart .recharts-area-curve {
+  filter: drop-shadow(0 0 5px rgba(0, 255, 136, 0.85));
+}
+.neon-chart .recharts-line-curve[stroke='#ff2e63'] {
+  filter: drop-shadow(0 0 5px rgba(255, 46, 99, 0.85));
+}
+.neon-chart .recharts-line-curve[stroke='#ff00aa'] {
+  filter: drop-shadow(0 0 5px rgba(255, 0, 170, 0.8));
+}
+.neon-chart .recharts-wrapper,
+.neon-chart svg {
+  outline: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

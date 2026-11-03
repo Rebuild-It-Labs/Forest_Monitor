@@ -1,0 +1,97 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="600" viewBox="0 0 960 600" preserveAspectRatio="xMidYMid slice">
+
+<defs>
+  <filter id="terrain" x="0" y="0" width="100%" height="100%" color-interpolation-filters="sRGB">
+    <feTurbulence type="fractalNoise" baseFrequency="0.007 0.011" numOctaves="5" seed="5629" result="n1"/>
+    <feColorMatrix in="n1" type="matrix" values="1 0 0 0 0  1 0 0 0 0  1 0 0 0 0  0 0 0 0 1" result="g1"/>
+    <feComponentTransfer in="g1" result="g1c">
+      <feFuncR type="linear" slope="2.6" intercept="-0.78"/><feFuncG type="linear" slope="2.6" intercept="-0.78"/><feFuncB type="linear" slope="2.6" intercept="-0.78"/>
+    </feComponentTransfer>
+    <feComponentTransfer in="g1c" result="pal">
+      <feFuncR type="table" tableValues="0.02 0.04 0.07 0.12 0.22 0.36"/><feFuncG type="table" tableValues="0.10 0.17 0.26 0.36 0.46 0.52"/><feFuncB type="table" tableValues="0.04 0.06 0.08 0.10 0.15 0.18"/>
+    </feComponentTransfer>
+    <feTurbulence type="fractalNoise" baseFrequency="0.085" numOctaves="2" seed="5636" result="n2"/>
+    <feColorMatrix in="n2" type="matrix" values="1 0 0 0 0  1 0 0 0 0  1 0 0 0 0  0 0 0 0 1" result="g2"/>
+    <feComposite in="pal" in2="g2" operator="arithmetic" k1="0.7" k2="0.62" k3="0" k4="0" result="grain"/>
+    
+  </filter>
+  <filter id="soil" x="0" y="0" width="100%" height="100%" color-interpolation-filters="sRGB">
+    <feTurbulence type="fractalNoise" baseFrequency="0.03 0.05" numOctaves="3" seed="5632" result="s"/>
+    <feColorMatrix in="s" type="matrix" values="1 0 0 0 0  1 0 0 0 0  1 0 0 0 0  0 0 0 0 1" result="sg"/>
+    <feComponentTransfer in="sg" result="sp">
+      <feFuncR type="table" tableValues="0.38 0.52 0.62 0.72 0.8"/><feFuncG type="table" tableValues="0.27 0.38 0.46 0.54 0.6"/><feFuncB type="table" tableValues="0.16 0.22 0.28 0.34 0.4"/>
+    </feComponentTransfer>
+    <feComposite in="sp" in2="SourceAlpha" operator="in" result="fill"/>
+    <feMorphology in="SourceAlpha" operator="erode" radius="2" result="inner"/>
+    <feGaussianBlur in="inner" stdDeviation="2" result="innerBlur"/>
+    <feComposite in="fill" in2="innerBlur" operator="in"/>
+  </filter>
+  <filter id="mono" color-interpolation-filters="sRGB">
+    <feColorMatrix type="saturate" values="0.1"/>
+    <feComponentTransfer><feFuncR type="linear" slope="0.5" intercept="0.02"/><feFuncG type="linear" slope="0.55" intercept="0.03"/><feFuncB type="linear" slope="0.55" intercept="0.03"/></feComponentTransfer>
+  </filter>
+  <radialGradient id="hot"><stop offset="0" stop-color="#ffd1e6" stop-opacity="0.95"/><stop offset="0.25" stop-color="#ff2e63" stop-opacity="0.85"/><stop offset="0.6" stop-color="#ff00aa" stop-opacity="0.4"/><stop offset="1" stop-color="#ff00aa" stop-opacity="0"/></radialGradient>
+  <radialGradient id="warm"><stop offset="0" stop-color="#ff7a45" stop-opacity="0.75"/><stop offset="0.5" stop-color="#ff2e63" stop-opacity="0.35"/><stop offset="1" stop-color="#ff2e63" stop-opacity="0"/></radialGradient>
+</defs><g filter="url(#mono)">
+<rect width="960" height="600" fill="#06140c" filter="url(#terrain)"/>
+
+<path d="M752.7,85 Q836.7,295.1 843.5,497.8" fill="none" stroke="#2a2418" stroke-width="3.2" opacity="0.4"/><path d="M752.7,85 Q836.7,295.1 843.5,497.8" fill="none" stroke="#d6c7a1" stroke-width="1.4" opacity="0.5"/>
+<path d="M843.5,497.8 Q579.6,499.2 413.9,470.8" fill="none" stroke="#2a2418" stroke-width="3.2" opacity="0.4"/><path d="M843.5,497.8 Q579.6,499.2 413.9,470.8" fill="none" stroke="#d6c7a1" stroke-width="1.4" opacity="0.5"/>
+<path d="M413.9,470.8 Q216.8,335.9 117.6,153.9" fill="none" stroke="#2a2418" stroke-width="3.2" opacity="0.4"/><path d="M413.9,470.8 Q216.8,335.9 117.6,153.9" fill="none" stroke="#d6c7a1" stroke-width="1.4" opacity="0.5"/>
+<path d="M117.6,153.9 Q467.5,258.6 747,314.4" fill="none" stroke="#2a2418" stroke-width="3.2" opacity="0.4"/><path d="M117.6,153.9 Q467.5,258.6 747,314.4" fill="none" stroke="#d6c7a1" stroke-width="1.4" opacity="0.5"/>
+<path d="M747,314.4 Q615.7,252.1 580.3,257.5" fill="none" stroke="#2a2418" stroke-width="3.2" opacity="0.4"/><path d="M747,314.4 Q615.7,252.1 580.3,257.5" fill="none" stroke="#d6c7a1" stroke-width="1.4" opacity="0.5"/>
+<path d="M580.3,257.5 Q508.9,294 363.8,341.5" fill="none" stroke="#2a2418" stroke-width="3.2" opacity="0.4"/><path d="M580.3,257.5 Q508.9,294 363.8,341.5" fill="none" stroke="#d6c7a1" stroke-width="1.4" opacity="0.5"/>
+<path d="M363.8,341.5 Q442.8,313.6 516.1,349.1" fill="none" stroke="#2a2418" stroke-width="3.2" opacity="0.4"/><path d="M363.8,341.5 Q442.8,313.6 516.1,349.1" fill="none" stroke="#d6c7a1" stroke-width="1.4" opacity="0.5"/>
+<path d="M516.1,349.1 Q381.8,365.1 353.8,403.3" fill="none" stroke="#2a2418" stroke-width="3.2" opacity="0.4"/><path d="M516.1,349.1 Q381.8,365.1 353.8,403.3" fill="none" stroke="#d6c7a1" stroke-width="1.4" opacity="0.5"/>
+<path d="M353.8,403.3 Q554.3,380.3 706.1,432.1" fill="none" stroke="#2a2418" stroke-width="3.2" opacity="0.4"/><path d="M353.8,403.3 Q554.3,380.3 706.1,432.1" fill="none" stroke="#d6c7a1" stroke-width="1.4" opacity="0.5"/>
+<path d="M706.1,432.1 Q531.7,451.3 469.9,493.6" fill="none" stroke="#2a2418" stroke-width="3.2" opacity="0.4"/><path d="M706.1,432.1 Q531.7,451.3 469.9,493.6" fill="none" stroke="#d6c7a1" stroke-width="1.4" opacity="0.5"/>
+<path d="M469.9,493.6 Q399.8,501.9 446.8,450.6" fill="none" stroke="#2a2418" stroke-width="3.2" opacity="0.4"/><path d="M469.9,493.6 Q399.8,501.9 446.8,450.6" fill="none" stroke="#d6c7a1" stroke-width="1.4" opacity="0.5"/>
+<path d="M446.8,450.6 Q559.9,441.4 711.3,476.1" fill="none" stroke="#2a2418" stroke-width="3.2" opacity="0.4"/><path d="M446.8,450.6 Q559.9,441.4 711.3,476.1" fill="none" stroke="#d6c7a1" stroke-width="1.4" opacity="0.5"/>
+<g filter="url(#soil)"><polygon points="815.1,78.6 786.7,103.3 772.1,126.7 732.4,120.9 726.3,115.9 698.1,75.9 724.9,62.5 744.9,39.7 756.1,35.1 801.7,44.3" fill="#000"/>
+<polygon points="798.2,532.2 817.4,477.4 884.8,466.6 871.1,519.4" fill="#000"/>
+<polygon points="401,541.2 358.2,464.7 427.1,398.8 476.7,477.6" fill="#000"/>
+<polygon points="182.6,152.8 151.8,185 116.8,225.9 79.6,197.1 58.5,187.9 63.9,128 76.4,101.7 115.7,70.7 189.4,117.2" fill="#000"/>
+<polygon points="783,308.1 773.7,345.4 734.1,371.4 694.2,346.7 702.9,297.2 739,263.9 764.4,278.4" fill="#000"/>
+<polygon points="518.5,334 516.3,226.9 641,182.4 640.4,286.3" fill="#000"/>
+<polygon points="402.2,332 407.4,365.9 368.9,390 341.3,371.1 333.9,358.2 315.6,331.7 325.4,294.7 368.2,303.7 397.8,313.2" fill="#000"/>
+<polygon points="578.5,357.9 540.8,391.4 485.6,429.1 468.9,364.4 455.7,302 509.1,300.5 552.6,300.7" fill="#000"/>
+<polygon points="414.6,398.2 382.4,430.8 360.3,447.7 332,452.6 301.3,439.5 305.9,405.3 315.8,384.2 331.5,342.4 378.9,351.2 384.5,390.7" fill="#000"/>
+<polygon points="747.3,429.4 734.5,456.4 704.3,459 672.7,441.4 668.4,418.6 701.6,403.6 727.1,393.8" fill="#000"/>
+<polygon points="532.2,484.9 522.2,527.5 508.8,568.7 457.8,574.6 421.7,525.8 377.7,509.5 404.9,422.1 425.2,407.6 506.8,399.1 525.9,427.6" fill="#000"/>
+<polygon points="492.9,458.2 476.8,474.9 464.3,485.6 426.8,483.7 422.5,477.6 398.6,448.2 402.6,417.7 440.9,421.1 470.7,408.3 485.8,426.1" fill="#000"/>
+<polygon points="757.9,465.9 752,517.2 729.3,513.7 693.6,515 670.1,510.7 666.8,468.5 678.7,460.8 708.7,440.8 714.6,447 733.4,454" fill="#000"/></g></g><rect width="960" height="600" fill="#000" opacity="0.28"/><g opacity="0.85"><circle cx="698.4" cy="120.7" r="52.3" fill="url(#hot)"/>
+<circle cx="843.3" cy="546.9" r="43.3" fill="url(#warm)"/>
+<circle cx="388.6" cy="403" r="67.7" fill="url(#warm)"/>
+<circle cx="188.9" cy="220.5" r="70.3" fill="url(#hot)"/>
+<circle cx="732.3" cy="238.6" r="54.4" fill="url(#warm)"/>
+<circle cx="640.1" cy="187.5" r="80.3" fill="url(#warm)"/>
+<circle cx="421.2" cy="365.3" r="48.5" fill="url(#hot)"/>
+<circle cx="540.5" cy="259" r="71" fill="url(#warm)"/>
+<circle cx="381.2" cy="464.4" r="50.6" fill="url(#warm)"/>
+<circle cx="692.4" cy="492.1" r="40.4" fill="url(#hot)"/>
+<circle cx="550" cy="395.9" r="83.7" fill="url(#warm)"/>
+<circle cx="435.5" cy="507.5" r="43.8" fill="url(#warm)"/>
+<circle cx="752.2" cy="419.6" r="46.2" fill="url(#hot)"/>
+<circle cx="278.2" cy="277" r="35.1" fill="url(#warm)" opacity="0.8"/>
+<circle cx="233" cy="333.3" r="37.7" fill="url(#warm)" opacity="0.6"/>
+<circle cx="124.1" cy="479.9" r="82.8" fill="url(#warm)" opacity="0.7"/>
+<circle cx="345.7" cy="218.9" r="80.2" fill="url(#warm)" opacity="0.9"/>
+<circle cx="817.4" cy="385.9" r="82.8" fill="url(#warm)" opacity="0.6"/>
+<circle cx="545.9" cy="349.5" r="69.1" fill="url(#warm)" opacity="0.7"/></g>
+<g>
+  <rect x="258.9" y="257.7" width="38.6" height="38.6" fill="none" stroke="#00ff88" stroke-width="1.4" stroke-dasharray="7 4"/>
+  <rect x="258.9" y="240.7" width="64" height="16" fill="#00170c" stroke="#00ff88" stroke-width="1"/>
+  <text x="263.9" y="252.7" font-family="monospace" font-size="11" fill="#00ff88">P=0.97</text>
+</g>
+<g>
+  <rect x="212.3" y="312.6" width="41.4" height="41.4" fill="none" stroke="#00ff88" stroke-width="1.4" stroke-dasharray="7 4"/>
+  <rect x="212.3" y="295.6" width="64" height="16" fill="#00170c" stroke="#00ff88" stroke-width="1"/>
+  <text x="217.3" y="307.6" font-family="monospace" font-size="11" fill="#00ff88">P=0.79</text>
+</g>
+<g>
+  <rect x="78.6" y="434.4" width="91.1" height="91.1" fill="none" stroke="#00ff88" stroke-width="1.4" stroke-dasharray="7 4"/>
+  <rect x="78.6" y="417.4" width="64" height="16" fill="#00170c" stroke="#00ff88" stroke-width="1"/>
+  <text x="83.6" y="429.4" font-family="monospace" font-size="11" fill="#00ff88">P=0.86</text>
+</g>
+<rect width="960" height="600" fill="rgba(0,0,0,0)"/>
+</svg>
