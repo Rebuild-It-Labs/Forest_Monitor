@@ -3,7 +3,7 @@ import react from '@vitejs/plugin-react';
 
 // https://vite.dev/config/
 export default defineConfig({
-  base: process.env.BASE_URL || './',
+  base: '/',
   plugins: [react()],
   build: {
     target: 'es2020',

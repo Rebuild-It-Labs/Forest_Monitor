@@ -1,0 +1,21 @@
+{
+  "buildCommand": "cd frontend && npm install && npm run build && mkdir -p dist/coordinates && cp -r ../coordinates/* dist/coordinates/ 2>/dev/null || true && cp ../last_run.json dist/ 2>/dev/null || true && cp ../coordinates.json dist/ 2>/dev/null || true",
+  "outputDirectory": "frontend/dist",
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ],
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "Access-Control-Allow-Origin",
+          "value": "*"
+        }
+      ]
+    }
+  ]
+}
