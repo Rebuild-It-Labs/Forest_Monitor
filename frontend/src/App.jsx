@@ -6,6 +6,7 @@ import BottomBar from './components/BottomBar.jsx';
 import BootScreen from './components/BootScreen.jsx';
 import ScreenFX from './components/ui/ScreenFX.jsx';
 import ErrorBoundary from './components/ErrorBoundary.jsx';
+import SatelliteTrackerCard from './components/panel/SatelliteTrackerCard.jsx';
 import { useMonitoringData } from './hooks/useMonitoringData.js';
 import { useMediaQuery, useViewportSize } from './hooks/useMediaQuery.js';
 
@@ -20,6 +21,12 @@ export default function App() {
   const [textureProgress, setTextureProgress] = useState(0);
   const [bootDelayDone, setBootDelayDone] = useState(false);
   const [geoError, setGeoError] = useState(null);
+
+  // Satellite tracking states
+  const [selectedSatelliteId, setSelectedSatelliteId] = useState(null);
+  const [showOrbits, setShowOrbits] = useState(true);
+  const [focusTargetOverride, setFocusTargetOverride] = useState(null);
+  const [satelliteTrackerOpen, setSatelliteTrackerOpen] = useState(false);
 
   const isMobile = useMediaQuery('(max-width: 1023px)');
   const { w, h } = useViewportSize();
@@ -44,13 +51,52 @@ export default function App() {
   );
 
   const close = useCallback(() => setSelectedId(null), []);
-  const select = useCallback((id) => setSelectedId(id), []);
+  const select = useCallback((id) => {
+    setSelectedId(id);
+    setFocusTargetOverride(null); // Clear satellite focus when selecting ground site
+  }, []);
+
+  const handleSelectSatellite = useCallback((satOrId) => {
+    const satId = typeof satOrId === 'string' ? satOrId : satOrId.id;
+    setSelectedSatelliteId(satId);
+    setSatelliteTrackerOpen(true);
+  }, []);
+
+  const handleFocusSatellite = useCallback((sat, state) => {
+    setSelectedId(null); // Close site details panel so view is clean
+    setFocusTargetOverride({
+      id: `sat-focus-${sat.id}-${Date.now()}`,
+      lat: state.lat,
+      lng: state.lng,
+    });
+  }, []);
+
+  const handleCloseSatelliteTracker = useCallback(() => {
+    setSatelliteTrackerOpen(false);
+    setSelectedSatelliteId(null);
+    setFocusTargetOverride(null);
+  }, []);
+
+  const handleToggleSatelliteTracker = useCallback(() => {
+    setSatelliteTrackerOpen((o) => {
+      const next = !o;
+      if (next && !selectedSatelliteId) {
+        setSelectedSatelliteId('sentinel-2a');
+      }
+      return next;
+    });
+  }, [selectedSatelliteId]);
 
   useEffect(() => {
-    const onKey = (e) => e.key === 'Escape' && setSelectedId(null);
+    const onKey = (e) => {
+      if (e.key === 'Escape') {
+        setSelectedId(null);
+        handleCloseSatelliteTracker();
+      }
+    };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
-  }, []);
+  }, [handleCloseSatelliteTracker]);
 
   const booting = !(stages.data && stages.geo && stages.texture && bootDelayDone) && status !== 'error';
 
@@ -64,6 +110,10 @@ export default function App() {
               locations={data.locations}
               selectedId={selectedId}
               onSelect={select}
+              selectedSatelliteId={selectedSatelliteId}
+              onSelectSatellite={handleSelectSatellite}
+              showOrbits={showOrbits}
+              focusTargetOverride={focusTargetOverride}
               panelInset={panelInset}
               recenterToken={recenterToken}
               indiaTexture={data.meta.indiaTexture}
@@ -85,10 +135,36 @@ export default function App() {
             locations={data.locations}
             selectedId={selectedId}
             onSelect={select}
+            onSelectSatellite={handleSelectSatellite}
+            selectedSatelliteId={selectedSatelliteId}
             isMobile={isMobile}
           />
-          <BottomBar onRecenter={() => setRecenterToken((t) => t + 1)} isMobile={isMobile} hidden={Boolean(selected) && isMobile} />
+
+          <BottomBar
+            onRecenter={() => {
+              setFocusTargetOverride(null);
+              setRecenterToken((t) => t + 1);
+            }}
+            isMobile={isMobile}
+            hidden={Boolean(selected) && isMobile}
+            onToggleSatelliteTracker={handleToggleSatelliteTracker}
+            satelliteTrackerOpen={satelliteTrackerOpen}
+          />
+
           <DetailsPanel location={selected} meta={data.meta} onClose={close} isMobile={isMobile} />
+
+          {/* Satellite Tracker Floating HUD Card */}
+          {satelliteTrackerOpen && (
+            <SatelliteTrackerCard
+              selectedSatelliteId={selectedSatelliteId || 'sentinel-2a'}
+              onSelectSatellite={handleSelectSatellite}
+              showOrbits={showOrbits}
+              onToggleOrbits={() => setShowOrbits((s) => !s)}
+              onFocusSatellite={handleFocusSatellite}
+              onClose={handleCloseSatelliteTracker}
+              isMobile={isMobile}
+            />
+          )}
         </>
       )}
 

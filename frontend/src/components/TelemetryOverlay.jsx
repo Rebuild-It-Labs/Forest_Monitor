@@ -23,11 +23,28 @@ function Row({ label, children }) {
   );
 }
 
+const NAME_TO_ID = {
+  'SENTINEL-2A': 'sentinel-2a',
+  'SENTINEL-2B': 'sentinel-2b',
+  'LANDSAT-9': 'landsat-9',
+  'LANDSAT-8': 'landsat-8',
+  'RESOURCESAT-2A': 'landsat-8',
+};
+
 /**
  * Left-hand floating telemetry stack: brand + clock, system status, key metrics and a live event feed.
  * On small screens it collapses to a single header bar that expands on tap.
  */
-export default function TelemetryOverlay({ telemetry, meta, locations, selectedId, onSelect, isMobile }) {
+export default function TelemetryOverlay({
+  telemetry,
+  meta,
+  locations,
+  selectedId,
+  onSelect,
+  onSelectSatellite,
+  selectedSatelliteId,
+  isMobile,
+}) {
   const { now, vals, feed } = useLiveTelemetry(telemetry);
   const [open, setOpen] = useState(false);
   const expanded = !isMobile || open;
@@ -64,9 +81,13 @@ export default function TelemetryOverlay({ telemetry, meta, locations, selectedI
             <span>{open ? '▾' : '▸'}</span>
           </button>
         )}
-        {meta.dataStatus === 'SYNTHETIC_DEMO' && (
+        {meta.dataStatus === 'SYNTHETIC_DEMO' ? (
           <div className="mt-2 inline-flex items-center gap-1.5 rounded-sm border border-alert-amber/40 bg-alert-amber/10 px-1.5 py-0.5 font-mono text-[9px] tracking-[0.2em] text-alert-amber">
             <span className="h-1.5 w-1.5 rounded-full bg-alert-amber" /> SIMULATED DEMO DATA
+          </div>
+        ) : (
+          <div className="mt-2 inline-flex items-center gap-1.5 rounded-sm border border-neon/40 bg-neon/10 px-1.5 py-0.5 font-mono text-[9px] tracking-[0.2em] text-neon">
+            <span className="h-1.5 w-1.5 rounded-full bg-neon animate-blink" /> LIVE GEE / REBUILD-IT DATA
           </div>
         )}
       </HudCard>
@@ -96,16 +117,34 @@ export default function TelemetryOverlay({ telemetry, meta, locations, selectedI
             </Row>
             <Row label="MODEL">{sys.modelVersion}</Row>
             <Row label="LAST COMPOSITE">{sys.lastCompositeUtc.slice(5, 16).replace('T', ' ')}Z</Row>
+
+            {/* Constellation Live Status Buttons */}
             <div className="mt-2 grid grid-cols-2 gap-1.5">
-              {sys.constellation.map((s) => (
-                <div key={s.name} className="rounded border border-white/10 bg-black/40 px-1.5 py-1 font-mono text-[9px] leading-tight">
-                  <div className="flex items-center gap-1 text-white/80">
-                    <span className={`h-1 w-1 rounded-full ${s.status === 'NOMINAL' ? 'bg-neon' : 'bg-alert-amber'}`} />
-                    {s.name}
-                  </div>
-                  <div className="text-white/40">PASS +{s.nextPassMin}m</div>
-                </div>
-              ))}
+              {sys.constellation.map((s) => {
+                const satId = NAME_TO_ID[s.name] || 'sentinel-2a';
+                const isSelected = selectedSatelliteId === satId;
+                return (
+                  <button
+                    key={s.name}
+                    onClick={() => onSelectSatellite?.(satId)}
+                    title={`Click to track ${s.name}`}
+                    className={`rounded border text-left px-1.5 py-1 font-mono text-[9px] leading-tight transition-all ${
+                      isSelected
+                        ? 'border-neon bg-neon/20 shadow-neon'
+                        : 'border-white/10 bg-black/40 hover:border-white/30 hover:bg-white/5'
+                    }`}
+                  >
+                    <div className="flex items-center justify-between text-white/80">
+                      <span className={isSelected ? 'text-neon font-bold' : ''}>{s.name}</span>
+                      <span className={`h-1.5 w-1.5 rounded-full ${s.status === 'NOMINAL' ? 'bg-neon animate-blink' : 'bg-alert-amber'}`} />
+                    </div>
+                    <div className="text-white/40 flex justify-between mt-0.5">
+                      <span>T-{s.nextPassMin}m</span>
+                      <span className="text-neon/70">TRACK ↗</span>
+                    </div>
+                  </button>
+                );
+              })}
             </div>
           </HudCard>
 
@@ -113,51 +152,40 @@ export default function TelemetryOverlay({ telemetry, meta, locations, selectedI
           <HudCard title="KEY METRICS" className="pointer-events-auto animate-fade-up [animation-delay:160ms]">
             <div className="grid grid-cols-2 gap-2">
               {telemetry.metrics.map((m) => (
-                <div key={m.id} className="rounded border border-white/10 bg-black/40 px-2 py-1.5">
-                  <div className={`font-display text-lg font-bold leading-none ${TONE_TEXT[m.tone] || TONE_TEXT.neon}`}>
+                <div key={m.id} className="rounded border border-white/10 bg-black/40 p-2 font-mono">
+                  <div className="text-[9px] tracking-wider text-white/45">{m.label}</div>
+                  <div className={`mt-0.5 font-display text-[17px] font-bold ${TONE_TEXT[m.tone]}`}>
                     <AnimatedNumber value={m.value} decimals={m.id === 'confidence' ? 1 : 0} />
-                    <span className="ml-0.5 text-[10px] font-medium opacity-70">{m.unit}</span>
+                    {m.unit && <span className="ml-1 text-[11px] font-normal text-white/60">{m.unit}</span>}
                   </div>
-                  <div className="mt-1 font-mono text-[8.5px] leading-tight tracking-[0.14em] text-white/45">{m.label}</div>
                 </div>
               ))}
             </div>
           </HudCard>
 
-          {/* live feed */}
-          <HudCard
-            title="LIVE FEED"
-            className="pointer-events-auto flex min-h-[9rem] flex-1 animate-fade-up flex-col [animation-delay:240ms]"
-            bodyClassName="min-h-0 flex-1 overflow-hidden p-2"
-            right={<span className="font-mono text-[9px] tracking-widest text-white/40">{fmtNum(feed.length)} EVT</span>}
-          >
-            <ul className="flex h-full flex-col gap-1 overflow-hidden">
-              <AnimatePresence initial={false}>
-                {feed.map((f) => (
-                  <motion.li
-                    key={f.id}
-                    layout
-                    initial={{ opacity: 0, x: -14 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    exit={{ opacity: 0 }}
-                    transition={{ duration: 0.35 }}
-                  >
-                    <button
-                      onClick={() => f.locationId && onSelect(f.locationId)}
-                      className={`w-full rounded border px-1.5 py-1 text-left transition-colors hover:border-neon/50 hover:bg-neon/5 ${
-                        f.locationId === selectedId ? 'border-neon/60 bg-neon/10' : 'border-white/10 bg-black/30'
-                      }`}
-                    >
-                      <div className="flex items-center gap-1.5 font-mono text-[9px]">
-                        <span className="tabular-nums text-white/40">{fmtClock(f.ts)}</span>
-                        <span className={`rounded-sm border px-1 tracking-widest ${TYPE_STYLE[f.type] || TYPE_STYLE.INFO}`}>{f.type}</span>
-                        <span className="truncate text-white/55">{nameOf(f.locationId)}</span>
-                      </div>
-                      <div className="mt-0.5 text-[12px] leading-snug text-white/80">{f.text}</div>
-                    </button>
-                  </motion.li>
-                ))}
-              </AnimatePresence>
+          {/* live alert / model inference feed */}
+          <HudCard title="LIVE SATELLITE & MODEL FEED" className="pointer-events-auto animate-fade-up [animation-delay:240ms]">
+            <ul className="space-y-1.5 font-mono text-[10px]" aria-live="polite">
+              {feed.map((item) => (
+                <li key={item.id} className="flex items-start gap-2">
+                  <span className={`mt-0.5 rounded border px-1 py-0.5 text-[8.5px] font-bold tracking-wider ${TYPE_STYLE[item.type]}`}>
+                    {item.type}
+                  </span>
+                  <div className="min-w-0 flex-1 leading-snug">
+                    <span className="text-white/80">{item.text}</span>
+                    {item.locationId && (
+                      <button
+                        onClick={() => onSelect(item.locationId)}
+                        className={`ml-1 text-neon underline decoration-neon/40 hover:decoration-neon ${
+                          selectedId === item.locationId ? 'text-white' : ''
+                        }`}
+                      >
+                        [{nameOf(item.locationId) || item.locationId}]
+                      </button>
+                    )}
+                  </div>
+                </li>
+              ))}
             </ul>
           </HudCard>
         </div>
