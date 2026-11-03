@@ -12,21 +12,21 @@
       },
       "changes": {
         "10y_to_5y": {
-          "pct": 7.184,
-          "reg_pct": 6.484,
-          "mask_pct": 7.184,
+          "pct": 5.478,
+          "reg_pct": 5.965,
+          "mask_pct": 5.478,
           "severity": "Severe Clear-Cut"
         },
         "10y_to_now": {
-          "pct": 3.085,
-          "reg_pct": 5.633,
-          "mask_pct": 3.085,
+          "pct": 2.463,
+          "reg_pct": 5.419,
+          "mask_pct": 2.463,
           "severity": "Moderate Change"
         },
         "5y_to_now": {
-          "pct": 3.78,
-          "reg_pct": 5.586,
-          "mask_pct": 3.78,
+          "pct": 3.372,
+          "reg_pct": 5.719,
+          "mask_pct": 3.372,
           "severity": "Moderate Change"
         }
       },
