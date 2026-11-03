@@ -1,0 +1,32 @@
+{
+  "key": "16.73661_79.91763_100ac",
+  "lat": 16.736613,
+  "lon": 79.917631,
+  "acres": 100.0,
+  "images": {
+    "10y": "10y_2016-10-16.png",
+    "5y": "5y_2021-10-20.png",
+    "now": "now_2026-10-14.png"
+  },
+  "changes": {
+    "10y_to_5y": {
+      "pct": 7.184,
+      "reg_pct": 6.484,
+      "mask_pct": 7.184,
+      "severity": "Severe Clear-Cut"
+    },
+    "10y_to_now": {
+      "pct": 3.085,
+      "reg_pct": 5.633,
+      "mask_pct": 3.085,
+      "severity": "Moderate Change"
+    },
+    "5y_to_now": {
+      "pct": 3.78,
+      "reg_pct": 5.586,
+      "mask_pct": 3.78,
+      "severity": "Moderate Change"
+    }
+  },
+  "note": "ML super-resolved imagery is AI-inferred; percentages are model estimates."
+}
