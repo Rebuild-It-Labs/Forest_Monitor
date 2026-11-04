@@ -9,15 +9,61 @@
         "5y": "5y_2021-10-24.png",
         "now": "now_2026-10-18.png"
       },
-      "changes": {
-        "5y_to_now": {
-          "pct": 13.668,
-          "reg_pct": 7.573,
-          "mask_pct": 13.668,
-          "severity": "Severe Clear-Cut"
+      "land_cover_pct": {
+        "5y": {
+          "Background": 53.45,
+          "Building": 0.14,
+          "Road": 0.08,
+          "Water": 41.02,
+          "Barren": 4.97,
+          "Forest": 0.34,
+          "Agriculture": 0.0
+        },
+        "now": {
+          "Background": 64.23,
+          "Building": 0.44,
+          "Road": 3.21,
+          "Water": 15.7,
+          "Barren": 15.94,
+          "Forest": 0.0,
+          "Agriculture": 0.49
         }
       },
-      "note": "ML super-resolved imagery is AI-inferred; percentages are model estimates."
+      "mean_confidence": {
+        "5y": 0.687,
+        "now": 0.711
+      },
+      "changes": {
+        "5y_to_now": {
+          "changed_pct": 46.348,
+          "forest_loss_pct": 0.171,
+          "forest_gain_pct": 0.0,
+          "top_transitions": [
+            [
+              "Water -> Background",
+              20.75
+            ],
+            [
+              "Water -> Barren",
+              7.003
+            ],
+            [
+              "Background -> Water",
+              6.984
+            ],
+            [
+              "Background -> Barren",
+              6.293
+            ],
+            [
+              "Background -> Road",
+              1.585
+            ]
+          ],
+          "severity": "Severe Change"
+        }
+      },
+      "note": "Super-resolved imagery is AI-inferred; the land-cover model was trained on 0.3 m aerial imagery (LoveDA), so percentages are rough estimates."
     },
     {
       "key": "31.25293_75.70447_200ac",
@@ -27,29 +73,129 @@
       "images": {
         "10y": "10y_2016-11-04.png",
         "5y": "5y_2021-11-03.png",
-        "now": "now_2026-11-02.png"
+        "now": "now_2026-11-04.png"
+      },
+      "land_cover_pct": {
+        "10y": {
+          "Background": 76.79,
+          "Building": 0.26,
+          "Road": 0.0,
+          "Water": 0.0,
+          "Barren": 14.02,
+          "Forest": 0.0,
+          "Agriculture": 8.94
+        },
+        "5y": {
+          "Background": 87.63,
+          "Building": 3.82,
+          "Road": 0.0,
+          "Water": 0.07,
+          "Barren": 1.48,
+          "Forest": 0.6,
+          "Agriculture": 6.4
+        },
+        "now": {
+          "Background": 92.65,
+          "Building": 1.32,
+          "Road": 0.0,
+          "Water": 0.0,
+          "Barren": 3.66,
+          "Forest": 0.22,
+          "Agriculture": 2.15
+        }
+      },
+      "mean_confidence": {
+        "10y": 0.784,
+        "5y": 0.825,
+        "now": 0.857
       },
       "changes": {
         "10y_to_5y": {
-          "pct": 5.369,
-          "reg_pct": 7.376,
-          "mask_pct": 5.369,
-          "severity": "Severe Clear-Cut"
+          "changed_pct": 19.805,
+          "forest_loss_pct": 0.0,
+          "forest_gain_pct": 0.271,
+          "top_transitions": [
+            [
+              "Barren -> Background",
+              9.938
+            ],
+            [
+              "Background -> Building",
+              3.347
+            ],
+            [
+              "Agriculture -> Background",
+              3.216
+            ],
+            [
+              "Background -> Agriculture",
+              1.512
+            ],
+            [
+              "Barren -> Agriculture",
+              0.949
+            ]
+          ],
+          "severity": "Severe Change"
         },
         "10y_to_now": {
-          "pct": 6.546,
-          "reg_pct": 7.738,
-          "mask_pct": 6.546,
-          "severity": "Severe Clear-Cut"
+          "changed_pct": 18.675,
+          "forest_loss_pct": 0.0,
+          "forest_gain_pct": 0.206,
+          "top_transitions": [
+            [
+              "Barren -> Background",
+              11.318
+            ],
+            [
+              "Agriculture -> Background",
+              4.373
+            ],
+            [
+              "Background -> Barren",
+              1.325
+            ],
+            [
+              "Background -> Building",
+              1.025
+            ],
+            [
+              "Background -> Forest",
+              0.206
+            ]
+          ],
+          "severity": "Severe Change"
         },
         "5y_to_now": {
-          "pct": 5.746,
-          "reg_pct": 7.695,
-          "mask_pct": 5.746,
-          "severity": "Severe Clear-Cut"
+          "changed_pct": 12.108,
+          "forest_loss_pct": 0.248,
+          "forest_gain_pct": 0.201,
+          "top_transitions": [
+            [
+              "Agriculture -> Background",
+              3.657
+            ],
+            [
+              "Building -> Background",
+              3.492
+            ],
+            [
+              "Background -> Barren",
+              1.511
+            ],
+            [
+              "Barren -> Background",
+              0.954
+            ],
+            [
+              "Background -> Building",
+              0.73
+            ]
+          ],
+          "severity": "Moderate Change"
         }
       },
-      "note": "ML super-resolved imagery is AI-inferred; percentages are model estimates."
+      "note": "Super-resolved imagery is AI-inferred; the land-cover model was trained on 0.3 m aerial imagery (LoveDA), so percentages are rough estimates."
     }
   ],
   "skipped_overlaps": []
