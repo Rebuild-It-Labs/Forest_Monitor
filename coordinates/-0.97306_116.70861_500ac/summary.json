@@ -1,0 +1,19 @@
+{
+  "key": "-0.97306_116.70861_500ac",
+  "lat": -0.9730559,
+  "lon": 116.7086111,
+  "acres": 500.0,
+  "images": {
+    "5y": "5y_2021-10-24.png",
+    "now": "now_2026-10-18.png"
+  },
+  "changes": {
+    "5y_to_now": {
+      "pct": 13.668,
+      "reg_pct": 7.573,
+      "mask_pct": 13.668,
+      "severity": "Severe Clear-Cut"
+    }
+  },
+  "note": "ML super-resolved imagery is AI-inferred; percentages are model estimates."
+}
